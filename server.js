@@ -23,6 +23,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, '/client/build')));
 
+app.use('/', adRoutes); // add ads routes to server
+app.use('/', userRoutes); // add users routes to server
+
 //catch incorrect links
 app.use((req, res) => {
     res.status(404).send({ message: 'Not found...' });
