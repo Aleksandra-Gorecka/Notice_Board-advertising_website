@@ -1,0 +1,8 @@
+{
+  "name": "Notice_Board-advertising_website",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:aleks-sobiecka/Notice_Board-advertising_website.git",
+  "author": "Aleksandra Sobiecka <aleks.sobiecka@gmail.com>",
+  "license": "MIT"
+}
