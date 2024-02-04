@@ -7,6 +7,10 @@ const mongoose = require('mongoose');
 //create new express app and save it as const 'app'
 const app = express();
 
+// import routes
+const adRoutes = require('./routes/ads.routes');
+const userRoutes = require('./routes/users.routes');
+
 //middleware
 app.use(
     cors({
