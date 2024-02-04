@@ -1,8 +1,23 @@
 const express = require('express');
+const cors = require('cors');
+const helmet = require('helmet');
+const path = require('path');
 const mongoose = require('mongoose');
 
 //create new express app and save it as const 'app'
 const app = express();
+
+//middleware
+app.use(
+    cors({
+      origin: ["http://localhost:3000", "http://localhost:8000"],
+      credentials: true,
+    })
+  );
+app.use(helmet());
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(express.static(path.join(__dirname, '/client/build')));
 
 //catch incorrect links
 app.use((req, res) => {
