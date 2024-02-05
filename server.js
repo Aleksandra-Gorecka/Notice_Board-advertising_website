@@ -10,6 +10,7 @@ const app = express();
 // import routes
 const adRoutes = require('./routes/ads.routes');
 const userRoutes = require('./routes/users.routes');
+const authRoutes = require('./routes/auth.routes');
 
 //middleware
 app.use(
@@ -21,10 +22,13 @@ app.use(
 app.use(helmet());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+//serve static files from the React app
 app.use(express.static(path.join(__dirname, '/client/build')));
 
-app.use('/', adRoutes); // add ads routes to server
-app.use('/', userRoutes); // add users routes to server
+//add routes
+app.use('/api', adRoutes); // add ads routes to server
+app.use('/api', userRoutes); // add users routes to server
+app.use('/auth', authRoutes); // add auth routes to server
 
 //catch incorrect links
 app.use((req, res) => {
@@ -49,7 +53,7 @@ db.once('open', () => {
 });
 db.on('error', err => console.log('Error ' + err)); 
 
-// start server
+// start express server
 const server = app.listen(process.env.PORT || 8000, () => {
     console.log('Server is running...');
   });
