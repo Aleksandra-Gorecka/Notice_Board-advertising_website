@@ -51,7 +51,7 @@ app.use(
 app.use(helmet());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(session({ secret: DB_SESSION, store: MongoStore.create(mongoose.connection), resave: false, saveUninitialized: false }));
+app.use(session({ secret: 'xyz123', store: MongoStore.create(mongoose.connection), resave: false, saveUninitialized: false }));
 
 //serve static files from the React app
 app.use(express.static(path.join(__dirname, '/client/build')));
