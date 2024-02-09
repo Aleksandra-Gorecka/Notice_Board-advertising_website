@@ -8,13 +8,14 @@ const session = require('express-session');
 
 // secrets
 const NODE_ENV = process.env.NODE_ENV;
-const NBA_USERNAME = process.env.NBA_USERNAME;
-const NBA_PASSWORD = process.env.NBA_PASSWORD;
+const DB_USERNAME = process.env.DB_USERNAME;
+const DB_PASSWORD = process.env.DB_PASSWORD;
+const DB_SESSION = process.env.DB_SESSION;
 
 let dbURI = '';
 
 //database source
-if(NODE_ENV === 'production') dbURI = 'mongodb+srv://${NBA_USERNAME}:${NBA_PASSWORD}@cluster0.mwo8so1.mongodb.net/?retryWrites=true&w=majority'
+if(NODE_ENV === 'production') dbURI = 'mongodb+srv:'+ DB_USERNAME +':'+ DB_PASSWORD +'@cluster0.mwo8so1.mongodb.net/?retryWrites=true&w=majority'
 else if(NODE_ENV === 'test') dbURI = 'mongodb://0.0.0.0:27017/NoticeBoardDBtest';
 else dbURI = 'mongodb://0.0.0.0:27017/NoticeBoardDB';
 
@@ -50,7 +51,7 @@ app.use(
 app.use(helmet());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(session({ secret: 'xyz999', store: MongoStore.create(mongoose.connection), resave: false, saveUninitialized: false }));
+app.use(session({ secret: DB_SESSION, store: MongoStore.create(mongoose.connection), resave: false, saveUninitialized: false }));
 
 //serve static files from the React app
 app.use(express.static(path.join(__dirname, '/client/build')));
