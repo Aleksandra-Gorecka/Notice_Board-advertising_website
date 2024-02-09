@@ -60,3 +60,18 @@ exports.login = async (req, res) => {
 exports.getUser = async (req, res) => {
     res.send({ message: "Yeah I'm logged" });
 }
+
+exports.logout = async (req, res) => {
+    try {
+        req.session.destroy();
+
+        if (process.env.NODE_ENV !== "production") {
+            await Session.deleteMany({});
+        }
+
+        res.status(200).send( { message: 'You have successfully logged out' });
+
+    } catch (err) {
+        res.status(400).send({ message: 'Bad request' });
+    }
+}
