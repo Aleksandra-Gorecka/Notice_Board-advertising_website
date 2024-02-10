@@ -6,11 +6,12 @@ const Session = require('../models/session.model');
 
 exports.register = async (req, res) => {
     try {
-        const {login, password } = req.body;
+        const {login, password, phoneNumber } = req.body;
         const fileType = req.file ? await getImageFileType(req.file) : 'unknown';
 
         if (login && typeof login === 'string' && 
             password && typeof password === 'string' && 
+            phoneNumber && !isNaN(phoneNumber) && 
             req.file && ['image/png', 'image/jpeg', 'image/gif'].includes(fileType)) {
 
             const userWithLogin = await User.findOne({ login });
@@ -19,7 +20,13 @@ exports.register = async (req, res) => {
                 return res.status(409).send({ message: 'User with this login already exists'});
             }
 
-            const user = await User.create({ login, password: await bcrypt.hash(password, 10), avatar: req.file.filename });
+            const user = await User.create({ 
+                login, 
+                password: await bcrypt.hash(password, 10), 
+                avatar: req.file.filename, 
+                phoneNumber: Number(phoneNumber) 
+            });
+            
             res.status(201).send({ message: 'User created ' + user.login });
         } else {
             const path = req.file ? req.file.path : null;
