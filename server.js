@@ -55,6 +55,7 @@ app.use(session({ secret: DB_SESSION, store: MongoStore.create(mongoose.connecti
 
 //serve static files from the React app
 app.use(express.static(path.join(__dirname, '/client/build')));
+app.use(express.static(path.join(__dirname, '/public')));
 
 //add routes
 app.use('/api', adRoutes); // add ads routes to server
