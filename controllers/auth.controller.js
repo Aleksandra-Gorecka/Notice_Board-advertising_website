@@ -2,6 +2,7 @@ const User = require('../models/user.model');
 const bcrypt = require('bcryptjs');
 const getImageFileType = require('../utils/getImageFileType');
 const fs = require('fs');
+const Session = require('../models/session.model');
 
 exports.register = async (req, res) => {
     try {
@@ -83,5 +84,6 @@ exports.logout = async (req, res) => {
 
     } catch (err) {
         res.status(400).send({ message: 'Bad request' });
+        //console.log(err);
     }
 }
