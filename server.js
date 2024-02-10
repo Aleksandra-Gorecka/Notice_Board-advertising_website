@@ -38,7 +38,6 @@ const server = app.listen(process.env.PORT || 8000, () => {
 
 // import routes
 const adRoutes = require('./routes/ads.routes');
-const userRoutes = require('./routes/users.routes');
 const authRoutes = require('./routes/auth.routes');
 
 //middleware
@@ -59,7 +58,6 @@ app.use(express.static(path.join(__dirname, '/public')));
 
 //add routes
 app.use('/api', adRoutes); // add ads routes to server
-app.use('/api', userRoutes); // add users routes to server
 app.use('/auth', authRoutes); // add auth routes to server
 
 //catch incorrect links
