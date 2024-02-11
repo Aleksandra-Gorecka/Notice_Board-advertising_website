@@ -14,7 +14,7 @@ const authMiddleware = async (req, res, next) => {
 
       // if session is found, parse it and set user in req.session
       const sessionData = JSON.parse(sessionRecord.session);
-      req.session.user = {
+        req.session.user = {
         id: sessionData.user.id,
         login: sessionData.user.login,
       }
