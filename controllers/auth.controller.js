@@ -10,6 +10,8 @@ exports.register = async (req, res) => {
         const {login, password, phoneNumber } = sanitize(req.body);
         const fileType = req.file ? await getImageFileType(req.file) : 'unknown';
 
+        console.log(fileType);
+
         if (login && typeof login === 'string' && 
             password && typeof password === 'string' && 
             phoneNumber && !isNaN(phoneNumber) && 

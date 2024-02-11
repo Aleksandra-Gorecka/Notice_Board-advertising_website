@@ -2,7 +2,6 @@ const Ad = require('../models/ad.model');
 const getImageFileType = require('../utils/getImageFileType');
 const sanitize = require("mongo-sanitize");
 const fs = require('fs');
-const path = require('path');
 
 exports.getAllAds = async (req, res) => {
     try {
@@ -65,7 +64,7 @@ exports.postNewAd = async (req, res) => {
         const { title, description, price, location } = sanitize(req.body);
         const fileType = req.file ? await getImageFileType(req.file) : 'unknown';
 
-        console.log(title, description, price, location );
+        //console.log(title, description, price, location, fileType );
 
         if (title && typeof title === 'string' && 
             description && typeof description === 'string' &&
@@ -131,7 +130,7 @@ exports.postNewAd = async (req, res) => {
 
 
 exports.updateAd = async (req, res) => {
-    const { title, description, publicationDate, price, location } = sanitize(req.body);
+    const { title, description, price, location } = sanitize(req.body);
     const fileType = req.file ? await getImageFileType(req.file) : 'unknown';
 
     try {
