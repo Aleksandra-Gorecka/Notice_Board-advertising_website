@@ -2,6 +2,7 @@ const Ad = require('../models/ad.model');
 const getImageFileType = require('../utils/getImageFileType');
 const sanitize = require("mongo-sanitize");
 const fs = require('fs');
+const path = require('path');
 
 exports.getAllAds = async (req, res) => {
     try {
@@ -22,6 +23,18 @@ exports.getAdById = async (req, res) => {
         res.status(500).json({ message: err });
       }
 };
+
+/* exports.getById = async (req, res) => {
+
+  const id = req.params.id;
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+      res.status(501).json({ message: 'Invalid UUID' });
+  } else {
+      const ad = await Ad.findById(req.params.id).populate({ path: 'user', select: '-password' });
+      if (!ad) res.status(404).json({ message: 'Ad not found' });
+      else res.json(ad);
+  };
+}; */
 
 exports.getAdsBySerchPhrase = async (req, res) => {
   try {
@@ -49,20 +62,48 @@ exports.getAdsBySerchPhrase = async (req, res) => {
 
 exports.postNewAd = async (req, res) => {
     try {
-        const { title, description, publicationDate, price, location } = sanitize(req.body);
+        const { title, description, price, location } = sanitize(req.body);
         const fileType = req.file ? await getImageFileType(req.file) : 'unknown';
 
+        console.log(title, description, price, location );
+
         if (title && typeof title === 'string' && 
-            description && typeof description === 'string' && 
-            publicationDate && !isNaN(Date.parse(publicationDate)) &&
+            description && typeof description === 'string' &&
             price && !isNaN(price) && 
             location && typeof location === 'string' &&
-            req.file && ['image/png', 'image/jpeg', 'image/gif'].includes(fileType)) {
+            req.session.user.id) {
 
+              if (!req.file || !['image/png', 'image/jpeg', 'image/gif'].includes(fileType)) {
+                if (req.file) {
+                    fs.unlinkSync(req.file.path)
+                }
+                return res.status(400).json({ message: 'Please upload an image file' });
+            }
+
+            //validation
+            const pattern = new RegExp(/([A-z\d\s.,!?$-*:]*)/, 'g');
+            const titleMatched = title.match(pattern).join('');
+            const descriptionMatched = description.match(pattern).join('');
+
+            const locationPattern = new RegExp(/([A-z\s-]*)/, 'g');
+            const locationMatched = location.match(locationPattern).join('');
+
+            if (titleMatched.length < title.length || 
+              descriptionMatched.length < description.length || 
+              locationMatched.length < location.length) {
+              if (req.file) {
+                fs.unlinkSync(req.file.path);
+              }
+              return res.status(400).json({ message: 'Invalid characters' });
+            }
+
+            const currentDate = new Date();
+
+            //create new Ad
             const newAd = new Ad(
               { title: title, 
                 description: description, 
-                publicationDate: publicationDate, 
+                publicationDate: currentDate, 
                 photo: req.file.filename,
                 price: price, 
                 location: location, 
@@ -72,53 +113,64 @@ exports.postNewAd = async (req, res) => {
             res.json({ message: 'New ad added successfully', ad: newAd });
 
         } else {
-          const path = req.file ? req.file.path : null;
-          fs.unlinkSync(req.file.path);
-          res.status(409).send({ message: 'Bad request' });
+          if (req.file) {
+            const path = req.file ? req.file.path : null;
+            fs.unlinkSync(path);
+          }
+          res.status(409).send({ message: 'Bad request ' });
         }
 
       } catch(err) {
-        const path = req.file ? req.file.path : null;
-        fs.unlinkSync(req.file.path);
+        if (req.file) {
+          const path = req.file ? req.file.path : null;
+          fs.unlinkSync(path);
+        }
         res.status(500).json({ message: err.message });
       }
 };
 
+
 exports.updateAd = async (req, res) => {
-    const { title, description, publicationDate, price, location } = req.body;
+    const { title, description, publicationDate, price, location } = sanitize(req.body);
     const fileType = req.file ? await getImageFileType(req.file) : 'unknown';
 
     try {
+      const ad = await Ad.findById(req.params.id);
 
-      if ( title && typeof title === 'string' && 
-          description && typeof description === 'string' && 
-          publicationDate && !isNaN(Date.parse(publicationDate)) &&
-          price && !isNaN(price) && 
-          location && typeof location === 'string') {
+      if(ad && ad.user == req.session.user.id) {
 
-          const ad = await Ad.findById(req.params.id);
+        //validation
+        const pattern = new RegExp(/([A-z\d\s.,!?$-*:]*)/, 'g');
+        const locationPattern = new RegExp(/([A-z\s-]*)/, 'g');
 
-          if(ad && ad.user == req.session.user.id) {
-            ad.title = title;
-            ad.description = description;
-            ad.publicationDate = publicationDate;
-            ad.price = price;
-            ad.location = location;
+        if (title && typeof title === 'string') {
+          const titleMatched = title.match(pattern).join('');
+          if (titleMatched.length < title.length) return res.status(400).json({ message: 'Invalid title' });
+          ad.title = title
+        };
+        if (description && typeof description === 'string') {
+          const descriptionMatched = description.match(pattern).join('');
+          if (descriptionMatched.length < description.length) return res.status(400).json({ message: 'Invalid description' });
+          ad.description = description;
+        };
+        if (price && !isNaN(price)) ad.price = price;
+        if (location && typeof location) {
+          const locationMatched = location.match(locationPattern).join('');
+          if (locationMatched.length < location.length) return res.status(400).json({ message: 'Invalid characters' });
+          ad.location = location
+        };
+        if (req.file && ['image/png', 'image/jpeg', 'image/gif'].includes(fileType)) {
+          fs.unlinkSync(req.file.path);
+          ad.photo = req.file.filename;
+        }
 
-            if (req.file && ['image/png', 'image/jpeg', 'image/gif'].includes(fileType)) {
-              fs.unlinkSync(req.file.path);
-              ad.photo = req.file.filename;
-            }
+        await ad.save();
+        res.json({ message: 'Ad updated', ad });
 
-            await ad.save();
-            res.json({ message: 'Ad updated', ad });
-
-          } else {
-            res.status(404).json({ message: 'Ad not found...' + ad.user + ' ' + req.session.user.id});
-          }
       } else {
-        res.status(409).send({ message: 'Invalid data added' });
+        res.status(404).json({ message: 'Ad not found...'});
       }
+      
     } catch(err) {
       res.status(500).json({ message: err });
     }
@@ -128,10 +180,10 @@ exports.deleteAd = async (req, res) => {
     try {
         const ad = await Ad.findById(req.params.id);
 
-        if(ad) {
+        if(ad && ad.user == req.session.user.id) {
           await Ad.deleteOne({ _id: req.params.id });
           fs.unlinkSync(req.file.path);
-          res.json({ message: 'Ad deleted', ad });
+          res.json({ message: 'Ad deleted' });
         }
         else res.status(404).json({ message: 'Ad not found...' });
       }
