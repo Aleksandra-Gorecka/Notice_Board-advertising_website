@@ -23,18 +23,6 @@ exports.getAdById = async (req, res) => {
       }
 };
 
-/* exports.getById = async (req, res) => {
-
-  const id = req.params.id;
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-      res.status(501).json({ message: 'Invalid UUID' });
-  } else {
-      const ad = await Ad.findById(req.params.id).populate({ path: 'user', select: '-password' });
-      if (!ad) res.status(404).json({ message: 'Ad not found' });
-      else res.json(ad);
-  };
-}; */
-
 exports.getAdsBySerchPhrase = async (req, res) => {
   try {
     const searchPhrase = req.params.searchPhrase
@@ -68,7 +56,7 @@ exports.postNewAd = async (req, res) => {
 
         if (title && typeof title === 'string' && 
             description && typeof description === 'string' &&
-            price && !isNaN(price) && 
+            price && !isNaN(Number(price)) && 
             location && typeof location === 'string' &&
             req.session.user.id) {
 
@@ -89,7 +77,8 @@ exports.postNewAd = async (req, res) => {
 
             if (titleMatched.length < title.length || 
               descriptionMatched.length < description.length || 
-              locationMatched.length < location.length) {
+              locationMatched.length < location.length ||
+              price <= 0) {
               if (req.file) {
                 fs.unlinkSync(req.file.path);
               }
@@ -113,16 +102,14 @@ exports.postNewAd = async (req, res) => {
 
         } else {
           if (req.file) {
-            const path = req.file ? req.file.path : null;
-            fs.unlinkSync(path);
+            fs.unlinkSync(req.file.path);
           }
           res.status(409).send({ message: 'Bad request ' });
         }
 
       } catch(err) {
         if (req.file) {
-          const path = req.file ? req.file.path : null;
-          fs.unlinkSync(path);
+          fs.unlinkSync(req.file.path);
         }
         res.status(500).json({ message: err.message });
       }
@@ -152,14 +139,14 @@ exports.updateAd = async (req, res) => {
           if (descriptionMatched.length < description.length) return res.status(400).json({ message: 'Invalid description' });
           ad.description = description;
         };
-        if (price && !isNaN(price)) ad.price = price;
+        if (price && !isNaN(Number(price))) ad.price = price;
         if (location && typeof location) {
           const locationMatched = location.match(locationPattern).join('');
           if (locationMatched.length < location.length) return res.status(400).json({ message: 'Invalid characters' });
           ad.location = location
         };
         if (req.file && ['image/png', 'image/jpeg', 'image/gif'].includes(fileType)) {
-          fs.unlinkSync(req.file.path);
+          fs.unlinkSync(path.join(__dirname,'..','public','uploads',ad.photo));
           ad.photo = req.file.filename;
         }
 
@@ -181,7 +168,7 @@ exports.deleteAd = async (req, res) => {
 
         if(ad && ad.user == req.session.user.id) {
           await Ad.deleteOne({ _id: req.params.id });
-          fs.unlinkSync(req.file.path);
+          fs.unlinkSync(path.join(__dirname,'..','public','uploads',ad.photo));
           res.json({ message: 'Ad deleted' });
         }
         else res.status(404).json({ message: 'Ad not found...' });

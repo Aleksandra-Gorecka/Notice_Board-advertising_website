@@ -2,10 +2,7 @@ const initialState = {
     ads: [
         
     ],
-    users: [
-
-    ],
-    sessions: [
+    user: [
 
     ],
 };
