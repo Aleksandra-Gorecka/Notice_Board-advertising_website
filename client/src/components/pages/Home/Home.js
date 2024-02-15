@@ -1,7 +1,9 @@
+import AdsList from "../../features/AdsList/AdsList";
+
 const Home = () =>{
     return (
         <section>
-            <h1>Home</h1>
+            <AdsList />
         </section>
     )
 }

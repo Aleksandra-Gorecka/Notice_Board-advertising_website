@@ -11,8 +11,15 @@ import Login from "./components/pages/Login/Login";
 import Logout from "./components/pages/Logout/Logout";
 import Register from "./components/pages/Register/Register";
 import NotFound from "./components/pages/NotFound/NotFound";
+import { useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { fetchAds } from "./redux/adsRedux";
 
 const App = () => {
+
+  const dispatch = useDispatch();
+  useEffect(() => dispatch(fetchAds()), [dispatch]);
+
   return (
     <Container>
         <Header />
