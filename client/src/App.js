@@ -15,11 +15,30 @@ import NotFound from "./components/pages/NotFound/NotFound";
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { fetchAds } from "./redux/adsRedux";
+import { API_URL } from '../src/config';
+import { logIn } from "./redux/usersRedux";
 
 const App = () => {
 
   const dispatch = useDispatch();
   useEffect(() => dispatch(fetchAds()), [dispatch]);
+
+
+  fetch(`${API_URL}/auth/user`)
+		.then(res => {
+			if (res.status === 200) {
+				return res.json();
+			} else {
+				throw new Error('Failed');
+			}
+		})
+		.then(data => {
+			dispatch(logIn({ login: data.user, id: data.id }));
+			console.log(data);
+		})
+		.catch(e => {
+			console.log(e);
+		});
 
   return (
     <Container>
