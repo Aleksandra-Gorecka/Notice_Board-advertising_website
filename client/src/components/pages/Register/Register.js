@@ -45,9 +45,9 @@ const Register = () =>{
     }
 
     return (
-        <Form className="col-12 col-sm-3 mx-auto" onSubmit={handleSubmit}>
+        <Form className="col-12 col-xl-6 col-md-6 col-sm-6 mx-auto" onSubmit={handleSubmit}>
 
-            <h1 className="my-4">Sign up</h1>
+            <h1 className="my-4 text-center">Sign up</h1>
 
             {status === "success" && (
                 <Alert variant="success">
@@ -78,33 +78,33 @@ const Register = () =>{
             )}
 
             {status === "loading" && (
-                <Spinner animation="border" role="status" className="d-block mx-auto">
+                <Spinner animation="border" role="status" className="d-block mx-auto my-3">
                     <span className="visually-hidden">Loading...</span>
                 </Spinner>
             )}
 
-            <Form.Group className="mb-3" controlId="formLogin">
-                <Form.Label>Login</Form.Label>
-                <Form.Control type="text" value={login} onChange={e => setLogin(e.target.value)} placeholder="Enter login" />
+            <Form.Group className="mb-3 d-flex align-items-center" controlId="formLogin">
+                <Form.Label className="my-0" style={{ flex: '1 0 0' }}>Login</Form.Label>
+                <Form.Control type="text" style={{ flex: '3 0 0' }} className="ms-2 shadow-none" value={login} onChange={e => setLogin(e.target.value)} placeholder="Enter login" />
             </Form.Group>
 
-            <Form.Group className="mb-3" controlId="formPassword">
-                <Form.Label>Password</Form.Label>
-                <Form.Control type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Password" />
+            <Form.Group className="mb-3 d-flex align-items-center" controlId="formPassword">
+                <Form.Label className="my-0" style={{ flex: '1 0 0' }}>Password</Form.Label>
+                <Form.Control type="password" style={{ flex: '3 0 0' }} className="ms-2 shadow-none" value={password} onChange={e => setPassword(e.target.value)} placeholder="Password" />
             </Form.Group>
 
-            <Form.Group className="mb-3" controlId="formphoneNumber">
-                <Form.Label>Phone Number</Form.Label>
-                <Form.Control type="tel" value={phoneNumber} onChange={e => setPhoneNumber(e.target.value)} placeholder="Phone Number" />
+            <Form.Group className="mb-3 d-flex align-items-center" controlId="formphoneNumber">
+                <Form.Label className="my-0" style={{ flex: '1 0 0' }}>Phone Number</Form.Label>
+                <Form.Control type="tel" style={{ flex: '3 0 0' }} className="ms-2 shadow-none" value={phoneNumber} onChange={e => setPhoneNumber(e.target.value)} placeholder="Phone Number" />
             </Form.Group>
 
-            <Form.Group className="mb-3" controlId="formavatar">
-                <Form.Label>Avatar</Form.Label>
-                <Form.Control type="file" onChange={e=> setAvatar(e.target.files[0])}/>
+            <Form.Group className="mb-3 d-flex align-items-center" controlId="formavatar">
+                <Form.Label className="my-0" style={{ flex: '1 0 0' }}>Avatar</Form.Label>
+                <Form.Control type="file" style={{ flex: '3 0 0' }} className="ms-2 shadow-none" onChange={e=> setAvatar(e.target.files[0])}/>
             </Form.Group>
 
-            <Button variant="primary" type="submit">
-                Submit
+            <Button className="w-100" variant="success" type="submit">
+                Sign up
             </Button>
 
         </Form>

@@ -19,7 +19,7 @@ const Logout = () =>{
     }, [dispatch])
 
 
-    return null;
+    return <p className="text-center my-5">Now you are logged out, see you soon!</p>
 }
 
 export default Logout;
