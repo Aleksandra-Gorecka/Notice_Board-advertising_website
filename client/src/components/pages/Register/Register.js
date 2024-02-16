@@ -40,7 +40,6 @@ const Register = () =>{
                 }
             })
             .catch(err => {
-                console.error('Error:', err);
                 setStatus('serverError');
             })
     }
