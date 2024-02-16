@@ -1,9 +1,25 @@
+import { useEffect } from 'react';
+import { API_URL } from '../../../config';
+import { logOut } from '../../../redux/usersRedux';
+import { useDispatch } from 'react-redux';
+
 const Logout = () =>{
-    return (
-        <section>
-            <h1>Logout</h1>
-        </section>
-    )
+
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        const options = {
+            method: 'DELETE',
+        }
+
+        fetch(`${API_URL}/logout`, options)
+        .then (() => {
+            dispatch(logOut());
+        })
+    }, [dispatch])
+
+
+    return null;
 }
 
 export default Logout;

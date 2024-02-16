@@ -11,6 +11,9 @@ const NavBar = () =>{
                         <Nav.Link to="/" as={NavLink}>
                             Home
                         </Nav.Link>
+                        <Nav.Link to="/logout" as={NavLink}>
+                            Sign out
+                        </Nav.Link>
                     </Nav>
                 </Navbar.Collapse>
             </Container>

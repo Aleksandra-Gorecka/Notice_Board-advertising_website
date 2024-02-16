@@ -6,7 +6,7 @@ import AdCard from "../AdCart/AdCart";
 const AdsList = () =>{
 
     const ads = useSelector(getAllAds);
-    console.log('Ads: ', ads);
+    //console.log('Ads: ', ads);
 
     return (
         <section>
