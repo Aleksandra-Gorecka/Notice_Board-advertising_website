@@ -4,8 +4,9 @@ import Footer from './components/views/Footer/Footer';
 import { Routes, Route } from 'react-router-dom';
 import Home from "./components/pages/Home/Home";
 import Ad from "./components/pages/Ad/Ad";
-import EditAd from "./components/pages/EditAd/EditAd";
-import NewAd from "./components/pages/NewAd/NewAd";
+import AdEdit from "./components/pages/AdEdit/AdEdit";
+import AdAdd from "./components/pages/AdAdd/AdAdd";
+import AdRemove from "./components/pages/AdRemove/AdRemove";
 import Search from "./components/pages/Search/Search";
 import Login from "./components/pages/Login/Login";
 import Logout from "./components/pages/Logout/Logout";
@@ -26,9 +27,10 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/ad/:id" element={<Ad />} />
-          <Route path="/ad/edit/:id" element={<EditAd />} />
-          <Route path="/ad/new" element={<NewAd />} />
-          <Route path="/search/:search" element={<Search />} />
+          <Route path="/ad/edit/:id" element={<AdEdit />} />
+          <Route path="/ad/add" element={<AdAdd />} />
+          <Route path="/ad/remove/:id" element={<AdRemove />} />
+          <Route path="/search/:searchPhrase" element={<Search />} />
           <Route path="/login" element={<Login />} />
           <Route path="/logout" element={<Logout />} />
           <Route path="/register" element={<Register />} />
