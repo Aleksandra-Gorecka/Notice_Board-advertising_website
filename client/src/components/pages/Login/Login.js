@@ -2,6 +2,7 @@ import { Form, Button, Alert, Spinner } from 'react-bootstrap';
 import { API_URL } from '../../../config';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { logIn } from '../../../redux/usersRedux';
 
 const Login = () =>{
@@ -9,7 +10,9 @@ const Login = () =>{
     const [login, setLogin] = useState('');
     const [password, setPassword] = useState('');
     const [status, setStatus] = useState(null); // null. 'loading', 'success', 'serverError', 'clientError'
+    
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const handleSubmit = e => {
         e.preventDefault();
@@ -28,6 +31,9 @@ const Login = () =>{
                 if (res.status === 200) {
                     setStatus('success');
                     dispatch(logIn({ login }));
+                    setTimeout(() => {
+						navigate('/');
+					}, 3000);
                 } else if (res.status === 400){
                     setStatus('clientError');
                 } else {
