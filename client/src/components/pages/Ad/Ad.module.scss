@@ -1,0 +1,25 @@
+.carImg {
+	max-height: 250px;
+	object-fit: cover;
+	object-position: center;
+}
+
+.seller {
+	display: flex;
+	img {
+		height: 30px;
+		width: 30px;
+		object-fit: cover;
+		border-radius: 50%;
+	}
+}
+
+.adDescribtion {
+	margin-left: 16px;
+	padding: 3px 0;
+	font-size: 14px;
+}
+
+.adDate {
+    font-size: 10px;
+}

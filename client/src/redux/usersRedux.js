@@ -1,5 +1,5 @@
 //selectors
-export const getLoggedUser = state => state.user;
+export const getLoggedUser = ({ users }) => users;
 
 //actions
 const createActionName = actionName => `app/users/${actionName}`;
