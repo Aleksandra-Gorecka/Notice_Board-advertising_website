@@ -32,7 +32,6 @@ const Login = () =>{
 						setStatus('success');
 						fetch(`${API_URL}/auth/user`)
 							.then(res => {
-								console.log(res);
 								if (res.status === 200) {
 									return res.json();
 								} else {
@@ -41,10 +40,8 @@ const Login = () =>{
 							})
 							.then(data => {
 								dispatch(logIn({ login: data.user, id: data.id }));
-								console.log(data);
 							})
 							.catch(e => {
-								console.log(e);
 							});
 					}, 400);
 					setTimeout(() => {

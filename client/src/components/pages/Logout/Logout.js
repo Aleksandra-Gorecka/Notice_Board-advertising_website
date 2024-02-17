@@ -14,14 +14,14 @@ const Logout = () =>{
             method: 'DELETE',
         }
 
-        fetch(`${API_URL}/logout`, options)
+        fetch(`${API_URL}/auth/logout`, options)
         .then (() => {
             dispatch(logOut());
             setTimeout(() => {
                 navigate('/');
             }, 3000);
         })
-    }, [dispatch])
+    }, [dispatch, navigate])
 
 
     return <p className="text-center my-5">Now you are logged out, see you soon!</p>

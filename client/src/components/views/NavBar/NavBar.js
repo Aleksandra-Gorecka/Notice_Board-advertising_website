@@ -6,7 +6,6 @@ import { getLoggedUser } from "../../../redux/usersRedux";
 const NavBar = () =>{
 
     const loggedUser = useSelector(getLoggedUser);
-    console.log(loggedUser);
 
     return (
         <Navbar bg="dark" data-bs-theme="dark" variant="dark" expand="lg" className="mt-4 mb-4 rounded">
