@@ -34,10 +34,10 @@ const App = () => {
 		})
 		.then(data => {
 			dispatch(logIn({ login: data.user, id: data.id }));
-			console.log(data);
+			//console.log(data);
 		})
 		.catch(e => {
-			console.log(e);
+			//console.log(e);
 		});
 
   return (
