@@ -15,35 +15,53 @@ const Login = () =>{
     const navigate = useNavigate();
 
     const handleSubmit = e => {
-        e.preventDefault();
+		e.preventDefault();
 
-        const options = {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ login, password })
-        }
-
-        setStatus('loading');
-        fetch(`${API_URL}/auth/login`, options)
-            .then(res => {
-                if (res.status === 200) {
-                    setStatus('success');
-                    dispatch(logIn({ login }));
-                    setTimeout(() => {
+		const options = {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({ login, password }),
+		};
+		setStatus('loading');
+		fetch(`${API_URL}/auth/login`, options)
+			.then(res => {
+				if (res.status === 200) {
+					setTimeout(() => {
+						setStatus('success');
+						fetch(`${API_URL}/auth/user`)
+							.then(res => {
+								console.log(res);
+								if (res.status === 200) {
+									return res.json();
+								} else {
+									throw new Error('Failed');
+								}
+							})
+							.then(data => {
+								dispatch(logIn({ login: data.user, id: data.id }));
+								console.log(data);
+							})
+							.catch(e => {
+								console.log(e);
+							});
+					}, 400);
+					setTimeout(() => {
 						navigate('/');
 					}, 3000);
-                } else if (res.status === 400){
-                    setStatus('clientError');
-                } else {
-                    setStatus('serverError');
-                }
-            })
-            .catch(err => {
-                setStatus('serverError');
-            })
-    }
+				} else if (res.status === 400) {
+					setStatus('clientError');
+				} else if (res.status === 409) {
+					setStatus('loginError');
+				} else {
+					setStatus('serverError');
+				}
+			})
+			.catch(err => {
+				setStatus('serverError');
+			});
+	};
 
     return (
         <Form className="col-12 col-sm-3 mx-auto" onSubmit={handleSubmit}>
