@@ -48,7 +48,7 @@ const Login = () =>{
     return (
         <Form className="col-12 col-sm-3 mx-auto" onSubmit={handleSubmit}>
 
-            <h1 className="my-4">Log in</h1>
+            <h1 className="my-4 text-center">Log in</h1>
 
             {status === "success" && (
                 <Alert variant="success">

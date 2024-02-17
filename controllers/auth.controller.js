@@ -59,14 +59,16 @@ exports.register = async (req, res) => {
             
             res.status(201).send({ message: 'User created ' + user.login });
         } else {
-            const path = req.file ? req.file.path : null;
-            fs.unlinkSync(path);
+            if (req.file) {
+                fs.unlinkSync(req.file.path);
+            }
             res.status(400).send({ message: 'Bad request' });
         }
 
     } catch (err) {
-        const path = req.file ? req.file.path : null;
-        fs.unlinkSync(path);
+        if (req.file) {
+            fs.unlinkSync(req.file.path);
+        }
         res.status(500).send({ message: err.message });
     }
 }
@@ -119,7 +121,11 @@ exports.login = async (req, res) => {
 }
 
 exports.getUser = async (req, res) => {
-    res.send({ message: "Yeah I'm logged" });
+    res.send({ 
+        message: "Yeah I'm logged",
+        user: req.session.user.login,
+		id: req.session.user.id,
+     });
 }
 
 exports.logout = async (req, res) => {
