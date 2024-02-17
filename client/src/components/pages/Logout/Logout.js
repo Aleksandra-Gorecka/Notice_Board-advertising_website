@@ -1,11 +1,13 @@
 import { useEffect } from 'react';
 import { API_URL } from '../../../config';
 import { logOut } from '../../../redux/usersRedux';
+import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 
 const Logout = () =>{
 
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     useEffect(() => {
         const options = {
@@ -15,6 +17,9 @@ const Logout = () =>{
         fetch(`${API_URL}/logout`, options)
         .then (() => {
             dispatch(logOut());
+            setTimeout(() => {
+                navigate('/');
+            }, 3000);
         })
     }, [dispatch])
 

@@ -1,4 +1,5 @@
 //selectors
+export const getLoggedUser = state => state.user;
 
 //actions
 const createActionName = actionName => `app/users/${actionName}`;
