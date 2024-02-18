@@ -46,7 +46,7 @@ const Login = () =>{
 					}, 400);
 					setTimeout(() => {
 						navigate('/');
-					}, 3000);
+					}, 2000);
 				} else if (res.status === 400) {
 					setStatus('clientError');
 				} else if (res.status === 409) {
@@ -66,10 +66,15 @@ const Login = () =>{
             <h1 className="my-4 text-center">Log in</h1>
 
             {status === "success" && (
-                <Alert variant="success">
-                    <Alert.Heading>Success!</Alert.Heading>
-                    <p>You have been successfully logged in!</p>
-                </Alert>
+                <div>
+                    <Alert variant="success">
+                        <Alert.Heading>Success!</Alert.Heading>
+                        <p>You have been successfully logged in!</p>
+                    </Alert>
+                    <Spinner animation="border" role="status" className="d-block mx-auto my-3">
+                        <span className="visually-hidden">Loading...</span>
+                    </Spinner>
+                </div>
             )}
 
             {status === "serverError" && (

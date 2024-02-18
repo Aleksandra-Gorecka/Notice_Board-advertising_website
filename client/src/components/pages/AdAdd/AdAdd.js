@@ -1,37 +1,16 @@
 import AdForm from "../../features/AdForm/AdForm";
-import { useState } from 'react';
-import { API_URL } from '../../../config';
-import { useNavigate } from 'react-router-dom';
+import { useSelector } from "react-redux";
+import { getLoggedUser } from "../../../redux/usersRedux";
+import { Navigate } from "react-router-dom";
 
 const AdAdd = () =>{
 
-	const navigate = useNavigate();
+	const loggedUser = useSelector(getLoggedUser);
 
-    const [user, setUser] = useState(null);
-    //console.log(user)
-
-    fetch(`${API_URL}/auth/user`)
-		.then(res => {
-			//console.log(res);
-			if (res.status === 200) {
-				return setUser('loggedUser');
-			} else {
-				setUser(null);
-				throw new Error('Failed');
-			}
-		})
-
-		.catch(e => {
-			console.log(e);
-		});
-
+	if (!loggedUser ) return <Navigate to={'/'} />;
     return (
         <section>
-            {user !== null ? (
-				<AdForm />
-			) : (
-				<p className="text-center my-5">You are not authorised</p>
-			)}
+			<AdForm />
         </section>
     )
 }

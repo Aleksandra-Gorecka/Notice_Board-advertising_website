@@ -11,7 +11,6 @@ const AdForm = () =>{
     const [title, setTitle] = useState('');
 	const [description, setDescription] = useState('');
 	const [price, setPrice] = useState('');
-	//const [publishDate, setPublishDate] = useState(new Date());
 	const [location, setLocation] = useState('');
 	const [photo, setPhoto] = useState(null);
     const [status, setStatus] = useState(null); // null. 'loading', 'success', 'serverError', 'clientError', 'loginError'
@@ -24,6 +23,7 @@ const AdForm = () =>{
 
     const handleSubmit = e => {
 		e.preventDefault();
+		console.log(status);
 
 		const fd = new FormData();
 		fd.append('title', title);
@@ -44,7 +44,9 @@ const AdForm = () =>{
 			.then(res => {
 				if (res.status === 201) {
 					setStatus('success');
-					navigate('/');
+					setTimeout(() => {
+						navigate('/');
+					}, 2000);
 					dispatch(fetchAds());
 				} else if (res.status === 400) {
 					setStatus('clientError');
@@ -66,10 +68,15 @@ const AdForm = () =>{
                 <h1 className="my-4 text-center">Add new ad</h1>
 
                 {status === 'success' && (
-					<Alert variant="success">
-						<Alert.Heading>Success!</Alert.Heading>
-						<p>You have been added the advertisement</p>
-					</Alert>
+					<div>
+						<Alert variant="success">
+							<Alert.Heading>Success!</Alert.Heading>
+							<p>You have been added the advertisement</p>
+						</Alert>
+						<Spinner animation="border" role="status" className="d-block mx-auto my-3">
+							<span className="visually-hidden">Loading...</span>
+						</Spinner>
+					</div>
 				)}
 				{status === 'serverError' && (
 					<Alert variant="danger">
@@ -93,7 +100,7 @@ const AdForm = () =>{
 				)}
 
 				{status === 'loading' && (
-					<Spinner animation="border" role="status">
+					<Spinner animation="border" role="status" className="d-block mx-auto my-3">
 						<span className="visually-hidden">Loading...</span>
 					</Spinner>
 				)}
