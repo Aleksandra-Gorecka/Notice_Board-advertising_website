@@ -10,7 +10,9 @@ const NavBar = () =>{
     return (
         <Navbar bg="dark" data-bs-theme="dark" variant="dark" expand="lg" className="mt-4 mb-4 rounded">
             <Container>
-                <Navbar.Brand>Notice Board</Navbar.Brand>
+                <Nav.Link to="/" as={NavLink}>
+                    <Navbar.Brand>Notice Board</Navbar.Brand>
+                </Nav.Link>
                 <Navbar.Toggle aria-controls="responsive-navbar-nav" className="shadow-none" />
                 <Navbar.Collapse id="responsive-navbar-nav">
                     <Nav className="justify-content-end flex-grow-1 pe-3">

@@ -7,7 +7,7 @@ import Ad from "./components/pages/Ad/Ad";
 import AdEdit from "./components/pages/AdEdit/AdEdit";
 import AdAdd from "./components/pages/AdAdd/AdAdd";
 import AdRemove from "./components/pages/AdRemove/AdRemove";
-import Search from "./components/pages/Search/Search";
+import SearchResults from "./components/pages/SearchResults/SearchResults";
 import Login from "./components/pages/Login/Login";
 import Logout from "./components/pages/Logout/Logout";
 import Register from "./components/pages/Register/Register";
@@ -50,7 +50,7 @@ const App = () => {
           <Route path="/ad/edit/:id" element={<AdEdit />} />
           <Route path="/ad/add" element={<AdAdd />} />
           <Route path="/ad/remove/:id" element={<AdRemove />} />
-          <Route path="/search/:searchPhrase" element={<Search />} />
+          <Route path="/search/:searchPhrase" element={<SearchResults />} />
           <Route path="/login" element={<Login />} />
           <Route path="/logout" element={<Logout />} />
           <Route path="/register" element={<Register />} />
