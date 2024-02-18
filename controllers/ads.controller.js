@@ -57,8 +57,14 @@ exports.postNewAd = async (req, res) => {
         if (title && typeof title === 'string' && 
             description && typeof description === 'string' &&
             price && !isNaN(Number(price)) && 
-            location && typeof location === 'string' &&
-            req.session.user.id) {
+            location && typeof location === 'string') {
+
+              if (!req.session.user.id) {
+                if (req.file) {
+                  fs.unlinkSync(req.file.path)
+                }
+                return res.status(401).json({ message: 'You need to be logged in' });
+              }
 
               if (!req.file || !['image/png', 'image/jpeg', 'image/gif'].includes(fileType)) {
                 if (req.file) {
@@ -98,13 +104,13 @@ exports.postNewAd = async (req, res) => {
                 user: req.session.user.id }); 
 
             await newAd.save();
-            res.json({ message: 'New ad added successfully', ad: newAd });
+            res.status(201).json({ message: 'New ad added successfully' + newAd });
 
         } else {
           if (req.file) {
             fs.unlinkSync(req.file.path);
           }
-          res.status(409).send({ message: 'Bad request ' });
+          res.status(400).send({ message: 'Bad request ' });
         }
 
       } catch(err) {
@@ -151,7 +157,7 @@ exports.updateAd = async (req, res) => {
         }
 
         await ad.save();
-        res.json({ message: 'Ad updated', ad });
+        res.status(201).json({ message: 'Ad updated'});
 
       } else {
         res.status(404).json({ message: 'Ad not found...'});
