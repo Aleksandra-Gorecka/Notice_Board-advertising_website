@@ -47,13 +47,18 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(session({ secret: DB_SESSION, store: MongoStore.create(mongoose.connection), resave: false, saveUninitialized: false }));
 
+//add routes
+app.use('/api', adRoutes); // add ads routes to server
+app.use('/auth', authRoutes); // add auth routes to server
+
 //serve static files from the React app
 app.use(express.static(path.join(__dirname, '/client/build')));
 app.use(express.static(path.join(__dirname, '/public')));
 
-//add routes
-app.use('/api', adRoutes); // add ads routes to server
-app.use('/auth', authRoutes); // add auth routes to server
+//serve React App
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '/client/build/index.html'));
+});
 
 //catch incorrect links
 app.use((req, res) => {
