@@ -2,6 +2,7 @@ const Ad = require('../models/ad.model');
 const getImageFileType = require('../utils/getImageFileType');
 const sanitize = require("mongo-sanitize");
 const fs = require('fs');
+const path = require('path');
 
 exports.getAllAds = async (req, res) => {
     try {
@@ -140,11 +141,13 @@ exports.updateAd = async (req, res) => {
           if (titleMatched.length < title.length) return res.status(400).json({ message: 'Invalid title' });
           ad.title = title
         };
+        if (title.length < 10 ) return res.status(400).json({ message: 'Too short title' });
         if (description && typeof description === 'string') {
           const descriptionMatched = description.match(pattern).join('');
           if (descriptionMatched.length < description.length) return res.status(400).json({ message: 'Invalid description' });
           ad.description = description;
         };
+        if (description.length < 20 ) return res.status(400).json({ message: 'Too short description' });
         if (price && !isNaN(Number(price))) ad.price = price;
         if (location && typeof location) {
           const locationMatched = location.match(locationPattern).join('');
@@ -165,6 +168,7 @@ exports.updateAd = async (req, res) => {
       
     } catch(err) {
       res.status(500).json({ message: err });
+      console.log(err);
     }
 };
 
@@ -172,6 +176,7 @@ exports.deleteAd = async (req, res) => {
     try {
         const ad = await Ad.findById(req.params.id);
 
+        console.log(path.join(__dirname,'..','public','uploads',ad.photo));
         if(ad && ad.user == req.session.user.id) {
           await Ad.deleteOne({ _id: req.params.id });
           fs.unlinkSync(path.join(__dirname,'..','public','uploads',ad.photo));
@@ -181,6 +186,7 @@ exports.deleteAd = async (req, res) => {
       }
       catch(err) {
         res.status(500).json({ message: err });
+        console.log(err);
       }
 };
 

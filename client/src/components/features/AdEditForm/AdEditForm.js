@@ -85,7 +85,7 @@ const AdEditForm = () =>{
 			    {status === 'clientError' && (
 				    <Alert variant="danger">
 					    <Alert.Heading>Not enough data or data are incorrect</Alert.Heading>
-					    <p>You have to fill all the fields. Photo has to be one of this type of
+					    <p>If you want to change image. Photo has to be one of this type of
 						    file: *.jpg, *.jpeg, *.gif, *.png.</p>
 				    </Alert>
 			    )}
