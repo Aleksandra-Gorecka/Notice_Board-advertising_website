@@ -1,10 +1,10 @@
-const express = require('express');
-const cors = require('cors');
-const helmet = require('helmet');
-const path = require('path');
-const mongoose = require('mongoose');
-const MongoStore = require('connect-mongo');
-const session = require('express-session');
+const express = require("express");
+const cors = require("cors");
+const helmet = require("helmet");
+const path = require("path");
+const mongoose = require("mongoose");
+const MongoStore = require("connect-mongo");
+const session = require("express-session");
 
 // secrets
 const NODE_ENV = process.env.NODE_ENV;
@@ -12,12 +12,19 @@ const DB_USERNAME = process.env.DB_USERNAME;
 const DB_PASSWORD = process.env.DB_PASSWORD;
 const DB_SESSION = process.env.DB_SESSION;
 
-let dbURI = '';
+let dbURI = "";
 
 //database source
-if(NODE_ENV === 'production') dbURI = 'mongodb+srv:'+ DB_USERNAME +':'+ DB_PASSWORD +'@cluster0.mwo8so1.mongodb.net/Notice_Board?retryWrites=true&w=majority'
-else if(NODE_ENV === 'test') dbURI = 'mongodb://0.0.0.0:27017/NoticeBoardDBtest';
-else dbURI = 'mongodb://0.0.0.0:27017/NoticeBoardDB';
+if (NODE_ENV === "production")
+  dbURI =
+    "mongodb+srv://" +
+    DB_USERNAME +
+    ":" +
+    DB_PASSWORD +
+    "@cluster0.mwo8so1.mongodb.net/Notice_Board?retryWrites=true&w=majority";
+else if (NODE_ENV === "test")
+  dbURI = "mongodb://0.0.0.0:27017/NoticeBoardDBtest";
+else dbURI = "mongodb://0.0.0.0:27017/NoticeBoardDB";
 
 //create new express app and save it as const 'app'
 const app = express();
@@ -26,42 +33,48 @@ const app = express();
 mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true });
 const db = mongoose.connection;
 
-db.once('open', () => {
-  console.log('Connected to the database');
+db.once("open", () => {
+  console.log("Connected to the database");
 
   // start express server
-const server = app.listen(process.env.PORT || 8000, () => {
-  console.log('Server is running...');
+  const server = app.listen(process.env.PORT || 8000, () => {
+    console.log("Server is running...");
+  });
+
+  // import routes
+  const adRoutes = require("./routes/ads.routes");
+  const authRoutes = require("./routes/auth.routes");
+
+  //middleware
+  app.use(cors({ origin: ["http://localhost:3000"], credentials: true }));
+  app.use(helmet());
+  app.use(express.json());
+  app.use(express.urlencoded({ extended: false }));
+  app.use(
+    session({
+      secret: DB_SESSION,
+      store: MongoStore.create(mongoose.connection),
+      resave: false,
+      saveUninitialized: false,
+    }),
+  );
+
+  //add routes
+  app.use("/api", adRoutes); // add ads routes to server
+  app.use("/auth", authRoutes); // add auth routes to server
+
+  //serve static files from the React app
+  app.use(express.static(path.join(__dirname, "/client/build")));
+  app.use(express.static(path.join(__dirname, "/public")));
+
+  //serve React App
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "/client/build/index.html"));
+  });
+
+  //catch incorrect links
+  app.use((req, res) => {
+    res.status(404).send({ message: "Not found..." });
+  });
 });
-
-// import routes
-const adRoutes = require('./routes/ads.routes');
-const authRoutes = require('./routes/auth.routes');
-
-//middleware
-app.use(cors({origin: ["http://localhost:3000"],credentials: true,}));
-app.use(helmet());
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(session({ secret: DB_SESSION, store: MongoStore.create(mongoose.connection), resave: false, saveUninitialized: false }));
-
-//add routes
-app.use('/api', adRoutes); // add ads routes to server
-app.use('/auth', authRoutes); // add auth routes to server
-
-//serve static files from the React app
-app.use(express.static(path.join(__dirname, '/client/build')));
-app.use(express.static(path.join(__dirname, '/public')));
-
-//serve React App
-app.get('*', (req, res) => {
-res.sendFile(path.join(__dirname, '/client/build/index.html'));
-});
-
-//catch incorrect links
-app.use((req, res) => {
-  res.status(404).send({ message: 'Not found...' });
-});
-});
-db.on('error', err => console.log('Error ' + err)); 
-
+db.on("error", (err) => console.log("Error " + err));
