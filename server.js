@@ -28,13 +28,11 @@ const db = mongoose.connection;
 
 db.once('open', () => {
   console.log('Connected to the database');
-});
-db.on('error', err => console.log('Error ' + err)); 
 
-// start express server
+  // start express server
 const server = app.listen(process.env.PORT || 8000, () => {
-    console.log('Server is running...');
-  });
+  console.log('Server is running...');
+});
 
 // import routes
 const adRoutes = require('./routes/ads.routes');
@@ -57,12 +55,13 @@ app.use(express.static(path.join(__dirname, '/public')));
 
 //serve React App
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '/client/build/index.html'));
+res.sendFile(path.join(__dirname, '/client/build/index.html'));
 });
 
 //catch incorrect links
 app.use((req, res) => {
-    res.status(404).send({ message: 'Not found...' });
+  res.status(404).send({ message: 'Not found...' });
 });
-
+});
+db.on('error', err => console.log('Error ' + err)); 
 
