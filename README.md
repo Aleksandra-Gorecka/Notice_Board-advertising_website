@@ -4,7 +4,7 @@ A CRUD app where you can browse advertisements, create your own account, log in,
 
 ## Demo
 
-[Please hold on while the page loads. Thank you! :)](https://5d29ccf3-8a64-4cc3-b9be-75ed724666af-00-30ob3kbi2cil.janeway.replit.dev/)
+[Please hold on while the page loads. Thank you! :)](https://0eabe29a-a0ce-40d2-ba6b-6b8b85e96936-00-7vwum9jn7nbi.worf.repl.co/)
 
 ### Tech Stack
 
